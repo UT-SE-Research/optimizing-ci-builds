@@ -323,8 +323,20 @@ def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time):
             if line.strip().split(":")[0] == "on":
                 in_on = True
                 on_indent = indent
+                # if yaml_file.split("\n")[line_index-1 is on: [push]\n then continueß
                 new_yaml_file += " " * indent
                 new_yaml_file += "on: [push]\n"
+                
+                
+                # increment line index as long as the indent is the on_indent
+                for l in yaml_file.split("\n")[line_index+1:len(yaml_file.split("\n"))]:
+                    if len(l) - len(l.lstrip()) == on_indent:
+                        line_index += 1
+                        new_yaml_file += " " * indent
+                        new_yaml_file += "on: [push]\n"
+                    else:
+                        break
+                
                 continue
             elif line.strip().split(":")[0] == "jobs":
                 in_job = True
@@ -378,8 +390,8 @@ def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time):
             else:
                 new_yaml_file += line + "\n"
     # print("Saving the new yaml file: ", f"{file_path}")
-    # with open (f"{file_path}", "w") as f:
-    #     f.write(new_yaml_file)
+    with open (f"{file_path}", "w") as f:
+        f.write(new_yaml_file)
     return new_yaml_file
 
 
@@ -411,6 +423,7 @@ def split_matrix(yaml_file: str):
             final_matrix = list(itertools.product(*jobs_with_matrix[job_name].values()))
             # print("The cartesian product of the matrix values: ", final_matrix)
             
+            new_job_name = ""
             # Based on the cartesian product, create new jobs
             for i, values in enumerate(final_matrix):
                 matrix_dict = {}
@@ -429,8 +442,25 @@ def split_matrix(yaml_file: str):
                 temp_dict["jobs"][new_job_name]["strategy"]["matrix"]= matrix_dict    
                 
             # Remove the original job
-            # del temp_dict["jobs"][job_name]
-
+            del temp_dict["jobs"][job_name]
+            
+            # if any job needs job_name, replace it with the new job name
+            for job in temp_dict["jobs"].keys():
+                if "needs" in temp_dict["jobs"][job]:
+                    if job_name in temp_dict["jobs"][job]["needs"]:
+                        print("The job needs the job with matrix: ", job)
+                        print(temp_dict["jobs"][job]["needs"])
+                        
+                        # find the index of the job_name in the needs list
+                        index = temp_dict["jobs"][job]["needs"].index(job_name)
+                        
+                        # check if needs is a list or a string
+                        if isinstance(temp_dict["jobs"][job]["needs"], list):
+                            # remove the job_name from the needs list and add the new job name
+                            temp_dict["jobs"][job]["needs"].pop(index)
+                            temp_dict["jobs"][job]["needs"].append(new_job_name)
+                        else:
+                            temp_dict["jobs"][job]["needs"] = new_job_name
     
     new_yaml_file = yaml.dump(temp_dict)
     
