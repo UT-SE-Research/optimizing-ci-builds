@@ -1,0 +1,1 @@
+classes/org/kohsuke/github/connector/;GitHubConnectorResponse.class;
