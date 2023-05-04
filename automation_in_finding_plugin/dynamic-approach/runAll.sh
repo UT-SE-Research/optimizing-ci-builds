@@ -259,8 +259,9 @@ do
             echo ${mvn_command} 
             ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt"
             cp effective-pom_org.xml effective-pom.xml
-            compile_err=$(grep -ir "COMPILATION ERROR"  "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
-            if [[ $compile_err -gt 0 ]]; then
+            compile_err=$(grep -ir "COMPILATION ERROR"  "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt" | wc -l)
+            echo "compile err=${compile_err}"
+            if [[ ${compile_err} -gt 0 ]]; then
                echo "I GOT COMPILATION ERROR"
                continue 
 
@@ -275,7 +276,7 @@ do
                     all_unsed_file=($(cat $currentDir/$3/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
                     echo "used files NOW=== ${all_used_file[@]}"
                     for uf in ${all_used_file[@]}; do
-                        echo "uf=$uf"
+                        #echo "uf=$uf"
                         search_for_dir_or_file=$(echo $uf | rev | cut -d'/' -f2 | rev)
                         #echo "search_for_dir=$search_for_dir_or_file"
                         if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
