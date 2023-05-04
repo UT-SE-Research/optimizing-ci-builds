@@ -52,6 +52,11 @@ do
         echo "JAVA -8"
         echo $JAVA_HOME
     fi
+    
+    if [[ -f "effective-pom.xml" ]]; then
+        rm "effective-pom.xml"
+    fi
+
     mvn org.apache.maven.plugins:maven-help-plugin:3.4.0:effective-pom -Doutput=effective-pom.xml
     cp "effective-pom.xml" "effective-pom_org.xml"
     already_run_plugin=[]
@@ -85,6 +90,7 @@ do
 
         Start_range="${range_build_plugins_from_effective_pom[0]}"
         end_range="${range_build_plugins_from_effective_pom[1]}"
+        echo "plugin range = $Start_range and $end_range"
         sed -n "$Start_range,${end_range}p" effective-pom.xml | awk -v adj=$Start_range '{printf("%-5d%s\n", NR-1+adj, $0)}' > tmp.xml
         ## Now we need to know the plugin line number that we want to disable. ss_plugin_line will store the line number of the plugin of the given groupId and artifactId
         groupId_line_arr=($(grep -n ">$groupId</" "tmp.xml" | cut -d':' -f2 | cut -d' ' -f1 )) #assuming that groupId comes first. even if it does not come, that will not be a problem because we are using variable to store the name. Here I am taking the first matched groupId. I can work here to comment other matched locations. Sometimes we may get a grpId more that 1 time
@@ -133,73 +139,68 @@ do
         echo "start=$ss_plugin_line, end=$plugin_end, $workflow_file, $java_version"
         #now run the mvn command  
         last_level_dir=$(echo $unused_dir | rev | cut -d'/' -f2 | rev)
-        compilation_err=0
         mvn clean
         mvn -version 
         echo $JAVA_HOME
         echo ${mvn_command} 
-        ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/log_${last_level_dir}_${ss_plugin_line}.txt"
-        #echo $last_level_dir
-        #check if the unused directory exists or not (find -name ..), if no directory found. we will report the plugin name
-        compile_err=$(grep -ir "COMPILATION ERROR"  "$currentDir/$logs/log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
-        if [ $compile_err -gt 0 ]; then
-           compilation_err=1
+        ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
+        cp "effective-pom_org.xml" "effective-pom.xml"
+        compile_err=$(grep -ir "COMPILATION ERROR" "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
+        if [[ $compile_err -gt 0 ]]; then
+           echo "I GOT COMPILATION ERROR"
            continue
-        fi
-        if [[ $compilation_err  == 0 ]]; then
-            echo "FIRST I am HERE************"
-            ### Look for other useful files/Dir in target dir
-            all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
-            all_unused_file=($(cat $currentDir/$3/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
+        
+           echo "filename=$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
 
-            for uf in ${all_used_file[@]}; do
-                echo "uf=$uf"
-                search_for_dir_or_file=$(echo $uf | rev | cut -d'/' -f2 | rev)
-                echo "search_for_dir=$search_for_dir_or_file"
-                if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
-                    #So, need to get the file_name
-                    search_for_dir_or_file=$(echo $uf | rev | cut -d';' -f2 | rev)
-                fi
-                # Now I will find if $search_for_dir_or_file exists in the target dir
-                if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
-                    main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
-                    echo "main unused dir=$main_unused_dir"
-                    echo "$uf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_${plugin_rank}_used#when_searching_for_${main_unused_dir}.txt"
-                fi
-            done
-            
-            search_for_dir_or_file=""
+        else #[[ ${compile_err}  -eq 0 ]]; then
 
-            for unf in ${all_unused_file[@]}; do
-                echo "unf=$unf"
-                search_for_dir_or_file=$(echo $unf | rev | cut -d'/' -f2 | rev)
-                echo "search_for_dir=$search_for_dir_or_file"
-                if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
-                    #So, need to get the file_name
-                    search_for_dir_or_file=$(echo $unf | rev | cut -d';' -f2 | rev)
-                fi
-                # Now I will find if $search_for_dir_or_file exists in the target dir
-                if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
-                    main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
-                    echo "main unused dir=$main_unused_dir"
-                    echo "$unf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_${plugin_rank}_unused#when_searching_for_${main_unused_dir}.txt"
-                fi
-            done
+            #if [[ ${build_fail} -eq 0 ]]; then
 
-            if [ "$(find "target" -name $last_level_dir | wc -l)" -gt 0 ]; then # directory found
-                echo "Still-exists"
-                echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Found-Dir.csv"
-                cp "effective-pom_org.xml" "effective-pom.xml"
-            else
-                echo "not found from"
-                echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Result.csv"
-                cp "effective-pom_org.xml" "effective-pom.xml"
-                plugin_which_generates_unused_dir_found=1
-                break
-            fi
+                echo "FIRST I am HERE************"
+                ### Look for other useful files/Dir in target dir
+                all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
+                all_unused_file=($(cat $currentDir/$3/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
+
+                for uf in ${all_used_file[@]}; do
+                    search_for_dir_or_file=$(echo $uf | rev | cut -d'/' -f2 | rev)
+                    if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
+                        #So, need to get the file_name
+                        search_for_dir_or_file=$(echo $uf | rev | cut -d';' -f2 | rev)
+                    fi
+                    # Now I will find if $search_for_dir_or_file exists in the target dir
+                    if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
+                        main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
+                        echo "$uf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_${plugin_rank}_used#when_searching_for_${main_unused_dir}.txt"
+                    fi
+                done
+                
+                search_for_dir_or_file=""
+
+                for unf in ${all_unused_file[@]}; do
+                    search_for_dir_or_file=$(echo $unf | rev | cut -d'/' -f2 | rev)
+                    if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
+                        #So, need to get the file_name
+                        search_for_dir_or_file=$(echo $unf | rev | cut -d';' -f2 | rev)
+                    fi
+                    # Now I will find if $search_for_dir_or_file exists in the target dir
+                    if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
+                        main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
+                        echo "$unf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_${plugin_rank}_unused#when_searching_for_${main_unused_dir}.txt"
+                    fi
+                done
+                
+                if [ "$(find "target" -name $last_level_dir | wc -l)" -gt 0 ]; then # directory found
+                    echo "Still-exists"
+                    echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Found-Dir.csv"
+                else
+                    echo "not found from"
+                    echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Result.csv"
+                    plugin_which_generates_unused_dir_found=1
+                    break
+                fi
+            #fi
         fi
     done
-
     if [ ${plugin_which_generates_unused_dir_found} -eq 0 ]; then # IF we do not find any plugin which generates the unnecessary dir from the above code 
         #1.2 IF we need to search for all plugins one by one
         # Collecting all plugins start and ending 
@@ -242,13 +243,12 @@ do
             s/^/<!-- /    # add comment tag to beginning of line
             s/$/ -->/     # add comment tag to end of line
             }" effective-pom.xml
-            echo "start=$plugin_start, end=$plugin_end, $workflow_file, $java_version"
 
             last_level_dir=$(echo $unused_dir | rev | cut -d'/' -f2 | rev)
             groupId_index=$((plugin_start + 1))
             artifact_index=$((plugin_start + 2))
-            #echo "RAJ,grp=$groupId_index"
-            #echo "RAJ,artifact=$artifact_index"
+            echo "RAJ,grp=$groupId_index"
+            echo "RAJ,artifact=$artifact_index"
             groupId=$(sed -n "${groupId_index}{s/.*>\(.*\)<.*/\1/p;q;}" effective-pom_org.xml)
             artifactId=$(sed -n "${artifact_index}{s/.*>\(.*\)<.*/\1/p;q;}" effective-pom_org.xml)
 
@@ -257,70 +257,75 @@ do
             mvn -version
             echo $JAVA_HOME
             echo ${mvn_command} 
-            ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/log_${last_level_dir}_${plugin_start}.txt"
-
-            compile_err=$(grep -ir "COMPILATION ERROR"  "$currentDir/$logs/log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
-            if [ $compile_err -gt 0 ]; then
-               compilation_err=1
+            ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt"
+            cp effective-pom_org.xml effective-pom.xml
+            compile_err=$(grep -ir "COMPILATION ERROR"  "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
+            if [[ $compile_err -gt 0 ]]; then
+               echo "I GOT COMPILATION ERROR"
                continue 
-            fi
 
-            if [[ $compilation_err  == 0 ]]; then
-                echo "I am HERE************"
-                ### Look for other useful files/Dir in target dir
-                all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
-                all_unsed_file=($(cat $currentDir/$3/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
-                echo "used files NOW=== ${all_used_file[@]}"
-                for uf in ${all_used_file[@]}; do
-                    echo "uf=$uf"
-                    search_for_dir_or_file=$(echo $uf | rev | cut -d'/' -f2 | rev)
-                    echo "search_for_dir=$search_for_dir_or_file"
-                    if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
-                        #So, need to get the file_name
-                        search_for_dir_or_file=$(echo $uf | rev | cut -d';' -f2 | rev)
-                    fi
-                    # Now I will find if $search_for_dir_or_file exists in the target dir
-                    if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
-                        main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
-                        echo "main unused dir=$main_unused_dir"
-                        echo "Last,SHANTO UT=>${groupId}#${artifactId}"
-                        echo "$uf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_100000_used_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
-                        echo "SHANTO**"
-                    fi
-                done
+            #echo "2nd, filename=$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
 
-                #exit
-                for unf in ${all_unused_file[@]}; do
-                    echo "unf=$unf"
-                    search_for_dir_or_file=$(echo $unf | rev | cut -d'/' -f2 | rev)
-                    echo "search_for_dir=$search_for_dir_or_file"
-                    if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
-                        #So, need to get the file_name
-                        search_for_dir_or_file=$(echo $unf | rev | cut -d';' -f2 | rev)
-                    fi
-                    # Now I will find if $search_for_dir_or_file exists in the target dir
-                    if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
-                        main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
-                        echo "main unused dir=$main_unused_dir"
-                        echo "Last,SHANTO UNUSED UT=>${groupId}#${artifactId}"
-                        echo "$unf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_100000_unused_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
-                    fi
-                done
+            else #[[ ${compile_err}  -eq 0 ]]; then
 
-            elif [ -n "$(find "target" -name $last_level_dir)" ]; then 
-                echo "Still found"
-                echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Found-Dir.csv"
-                cp "effective-pom_org.xml" "effective-pom.xml"
-            else
-                echo "not-found"
-                echo $Start_range
-                echo $end_range
-                #find the plugin name
-                echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Result.csv"
-                cp "effective-pom_org.xml" "effective-pom.xml"
-                break
+                #if [[ ${build_fail} -eq 0 ]]; then
+                    echo "I am HERE************"
+                    ### Look for other useful files/Dir in target dir
+                    all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
+                    all_unsed_file=($(cat $currentDir/$3/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
+                    echo "used files NOW=== ${all_used_file[@]}"
+                    for uf in ${all_used_file[@]}; do
+                        echo "uf=$uf"
+                        search_for_dir_or_file=$(echo $uf | rev | cut -d'/' -f2 | rev)
+                        #echo "search_for_dir=$search_for_dir_or_file"
+                        if [[ $search_for_dir_or_file == "" ]]; then #means that it is not a directory
+                            #So, need to get the file_name
+                            search_for_dir_or_file=$(echo $uf | rev | cut -d';' -f2 | rev)
+                        fi
+                        # Now I will find if $search_for_dir_or_file exists in the target dir
+                        if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
+                            main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
+                            echo "$uf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_100000_used_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
+                            #echo "SHANTO**"
+                        fi
+                    done
+
+                    search_for_dir_or_file=""
+                    #exit
+                    for unf in ${all_unused_file[@]}; do
+                        #echo "unf=$unf"
+                        search_for_dir_or_file=$(echo $unf | rev | cut -d'/' -f2 | rev)
+                        #echo "search_for_dir=$search_for_dir_or_file"
+                        if [[ ${search_for_dir_or_file} == "" ]]; then #means that it is not a directory
+                            #So, need to get the file_name
+                            echo "I am empty==>"
+                            search_for_dir_or_file=$(echo $unf | rev | cut -d';' -f2 | rev)
+                        fi
+                        # Now I will find if $search_for_dir_or_file exists in the target dir
+                        if [ $(find "target" -name $search_for_dir_or_file | wc -l) -eq 0 ]; then # directory/file search not found
+                            main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
+                            #echo "main unused dir=$main_unused_dir"
+                            #echo "Last,SHANTO UNUSED UT=>${groupId}#${artifactId}"
+                            echo "$unf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_100000_unused_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
+                        fi
+                    done
+
+                    if [ -n "$(find "target" -name $last_level_dir)" ]; then 
+                        echo "Still found"
+                        echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Found-Dir.csv"
+                    else
+                        echo "not-found"
+                        echo $Start_range
+                        echo $end_range
+                        echo "start=$plugin_start, end=$plugin_end, $workflow_file, $java_version,$groupId#$artifactId"
+                        #find the plugin name
+                        echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Result.csv"
+                        break
+                    fi
+               #fi
             fi
         done
     fi
+    exit
 done < $1
 echo $rule_set
