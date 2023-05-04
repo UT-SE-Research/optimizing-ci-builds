@@ -146,6 +146,7 @@ do
         ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
         cp "effective-pom_org.xml" "effective-pom.xml"
         compile_err=$(grep -ir "COMPILATION ERROR" "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
+
         if [[ $compile_err -gt 0 ]]; then
            echo "I GOT COMPILATION ERROR"
            continue
@@ -153,9 +154,13 @@ do
            echo "filename=$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
 
         else #[[ ${compile_err}  -eq 0 ]]; then
-
-            #if [[ ${build_fail} -eq 0 ]]; then
-
+            
+            compile_err_unknown=$(grep -ir "Unknown packaging" "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
+            if [[ $compile_err_unknown -gt 0 ]]; then
+               echo "I GOT Unknown Packaging"
+               continue
+            
+            else
                 echo "FIRST I am HERE************"
                 ### Look for other useful files/Dir in target dir
                 all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
@@ -198,7 +203,7 @@ do
                     plugin_which_generates_unused_dir_found=1
                     break
                 fi
-            #fi
+            fi
         fi
     done
     if [ ${plugin_which_generates_unused_dir_found} -eq 0 ]; then # IF we do not find any plugin which generates the unnecessary dir from the above code 
@@ -265,11 +270,13 @@ do
                echo "I GOT COMPILATION ERROR"
                continue 
 
-            #echo "2nd, filename=$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
-
             else #[[ ${compile_err}  -eq 0 ]]; then
 
-                #if [[ ${build_fail} -eq 0 ]]; then
+                compile_err_unknown=$(grep -ir "Unknown packaging" "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt" | wc -l)
+                if [[ $compile_err_unknown -gt 0 ]]; then
+                   echo "I GOT Unknown Packaging"
+                   continue
+                else
                     echo "I am HERE************"
                     ### Look for other useful files/Dir in target dir
                     all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
@@ -323,7 +330,7 @@ do
                         echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Result.csv"
                         break
                     fi
-               #fi
+               fi
             fi
         done
     fi
