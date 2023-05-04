@@ -245,8 +245,10 @@ do
             echo "start=$plugin_start, end=$plugin_end, $workflow_file, $java_version"
 
             last_level_dir=$(echo $unused_dir | rev | cut -d'/' -f2 | rev)
-            groupId_index=$((plugin_start + 2))
-            artifact_index=$((plugin_start + 3))
+            groupId_index=$((plugin_start + 1))
+            artifact_index=$((plugin_start + 2))
+            #echo "RAJ,grp=$groupId_index"
+            #echo "RAJ,artifact=$artifact_index"
             groupId=$(sed -n "${groupId_index}{s/.*>\(.*\)<.*/\1/p;q;}" effective-pom_org.xml)
             artifactId=$(sed -n "${artifact_index}{s/.*>\(.*\)<.*/\1/p;q;}" effective-pom_org.xml)
 
