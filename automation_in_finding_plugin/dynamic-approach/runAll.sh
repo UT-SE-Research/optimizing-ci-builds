@@ -206,6 +206,7 @@ do
             fi
         fi
     done
+    unranked_plugin_count=0
     if [ ${plugin_which_generates_unused_dir_found} -eq 0 ]; then # IF we do not find any plugin which generates the unnecessary dir from the above code 
         #1.2 IF we need to search for all plugins one by one
         # Collecting all plugins start and ending 
@@ -278,6 +279,7 @@ do
                    continue
                 else
                     echo "I am HERE************"
+                    unranked_plugin_count=$((unranked_plugin_count +1))
                     ### Look for other useful files/Dir in target dir
                     all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
                     all_unsed_file=($(cat $currentDir/$3/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
@@ -293,7 +295,7 @@ do
                         # Now I will find if $search_for_dir_or_file exists in the target dir
                         if [ "$(find "target" -name $search_for_dir_or_file | wc -l)" -eq 0 ]; then # directory/file search not found
                             main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
-                            echo "$uf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_100000_used_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
+                            echo "$uf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_unrank_${unranked_plugin_count}_used_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
                             #echo "SHANTO**"
                         fi
                     done
@@ -314,7 +316,7 @@ do
                             main_unused_dir=$(echo ${unused_dir} | rev | cut -d'/' -f2 | rev)
                             #echo "main unused dir=$main_unused_dir"
                             #echo "Last,SHANTO UNUSED UT=>${groupId}#${artifactId}"
-                            echo "$unf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_rank_100000_unused_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
+                            echo "$unf" >> "$currentDir/RQ2-PR-Category/${unused_proj_job}_removed_unrank_${unranked_plugin_count}_unused_${groupId}#${artifactId}_when_searching_for_${main_unused_dir}.txt" #rank 100000 means this plugin is not suggested by static analysis
                         fi
                     done
 
@@ -334,6 +336,5 @@ do
             fi
         done
     fi
-    exit
 done < $1
 echo $rule_set
