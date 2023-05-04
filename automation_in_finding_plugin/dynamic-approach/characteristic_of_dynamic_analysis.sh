@@ -11,6 +11,7 @@ fi
 #1-m unused (you tried one plugin, and it disabled many unused directory/file)
 #1-m both (you tried one plugin, and it disabled many unused and used directory/file)
 
+
 while read line
 do 
 
@@ -81,7 +82,7 @@ do
         fi
     done
 
-    echo "$filename_prefix","$org_unused_dir","${disable_one_used},$disable_m_used,$disable_one_unused,$disable_m_unused,$disable_m_both_used_unused" >> dynamic-characterstic.csv
+    echo "$filename_prefix","$org_unused_dir","${disable_one_used},$disable_one_unused,$disable_m_used,$disable_m_unused,$disable_m_both_used_unused" >> dynamic-characterstic.csv
     #echo "$filename_prefix and unused_dir= $unused_dir"
 
     #exit
