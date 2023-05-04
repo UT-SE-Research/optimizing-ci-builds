@@ -23,7 +23,6 @@ kafdrop,.github/workflows/pull_request.yml,17,mvn -B verify,kafdrop_pull_request
 matsim-example-project,.github/workflows/maven.yml,11,mvn -B verify,matsim-example-project_maven-build.csv,target/maven-status/~target/surefire-reports/~
 mcMMO,.github/workflows/maven.yml,17,mvn verify -B,mcMMO_maven-compile.csv,target/maven-status/~target/surefire-reports/~
 mooc-software-testing,.github/workflows/maven.yml,11,mvn -B package,mooc-software-testing_maven-build.csv,target/jacoco-ut/~target/maven-status/~target/site/~target/surefire-reports/~
-open-location-code,.github/workflows/main.yml,0,,open-location-code_main-testrust.csv,target/debug/;libopen_location_code.d;~target/debug/;libopen_location_code.rlib;~
 open-location-code,.github/workflows/main.yml,11,mvn package,open-location-code_main-testjava_java_11.csv,target/javadoc-bundle-options/;javadoc-options-javadoc-resources.xml;~target/maven-status/~target/surefire-reports/~
 open-location-code,.github/workflows/main.yml,16,mvn package,open-location-code_main-testjava_java_16.csv,target/javadoc-bundle-options/;javadoc-options-javadoc-resources.xml;~target/maven-status/~target/surefire-reports/~
 open-location-code,.github/workflows/main.yml,17,mvn package,open-location-code_main-testjava_java_17.csv,target/javadoc-bundle-options/;javadoc-options-javadoc-resources.xml;~target/maven-status/~target/surefire-reports/~
