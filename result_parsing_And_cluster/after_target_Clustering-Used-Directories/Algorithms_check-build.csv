@@ -1,0 +1,6 @@
+classes/
+test-classes/
+surefire/
+maven-archiver/
+;checkstyle-checker.xml;
+;algorithms-1.0-SNAPSHOT.jar;

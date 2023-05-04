@@ -1,0 +1,8 @@
+surefire-reports/
+maven-status/
+docker-ready/
+test-classes/;sasl-ssl.properties;
+test-classes/;person.proto;
+test-classes/;person.desc;
+;kafdrop-3.31.0-SNAPSHOT.jar;
+failsafe-reports/;TEST-kafdrop.KafdropIT.xml;

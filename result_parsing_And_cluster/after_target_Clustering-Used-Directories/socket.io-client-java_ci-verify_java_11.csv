@@ -1,0 +1,10 @@
+test-classes/io/socket/client/
+apidocs/
+classes/
+test-classes/io/socket/parser/
+surefire/
+test-classes/io/socket/util/
+test-classes/io/socket/hasbinary/
+test-classes/io/socket/backo/
+maven-archiver/
+javadoc-bundle-options/;package-list;

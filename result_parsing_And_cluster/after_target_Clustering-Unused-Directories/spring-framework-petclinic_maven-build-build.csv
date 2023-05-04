@@ -1,0 +1,17 @@
+site/
+surefire-reports/
+maven-status/
+.wro4j/
+test-classes/org/springframework/samples/petclinic/web/;VisitControllerTests.java;
+test-classes/org/springframework/samples/petclinic/web/;VetControllerTests.java;
+test-classes/org/springframework/samples/petclinic/web/;PetTypeFormatterTests.java;
+test-classes/org/springframework/samples/petclinic/web/;PetControllerTests.java;
+test-classes/org/springframework/samples/petclinic/web/;OwnerControllerTests.java;
+test-classes/org/springframework/samples/petclinic/web/;CrashControllerTests.java;
+test-classes/org/springframework/samples/petclinic/service/;ClinicServiceSpringDataJpaTests.java;
+test-classes/org/springframework/samples/petclinic/service/;ClinicServiceJpaTests.java;
+test-classes/org/springframework/samples/petclinic/service/;ClinicServiceJdbcTests.java;
+test-classes/org/springframework/samples/petclinic/service/;AbstractClinicServiceTests.java;
+test-classes/org/springframework/samples/petclinic/model/;ValidatorTests.java;
+;petclinic.war;
+;petclinic.js;

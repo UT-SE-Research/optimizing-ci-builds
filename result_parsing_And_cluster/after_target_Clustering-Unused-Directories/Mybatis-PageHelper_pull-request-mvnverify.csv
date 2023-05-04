@@ -1,0 +1,14 @@
+surefire-reports/
+test-classes/mysql/
+test-classes/postgresql/
+test-classes/oracle/
+test-classes/derby/
+test-classes/db2/
+test-classes/sqlserver/
+test-classes/mariadb/
+maven-status/
+test-classes/com/github/pagehelper/test/basic/dynamic/;CacheTest$1.class;
+test-classes/com/github/pagehelper/test/basic/cache/;CacheTest$1.class;
+test-classes/com/github/pagehelper/rowbounds/test/;RowBoundsTest$IdBean.class;
+test-classes/com/github/pagehelper/rowbounds/test/;PageRowBoundsTest$IdBean.class;
+;pagehelper-5.3.1.jar;

@@ -1,0 +1,4 @@
+maven-archiver/
+classes/
+;checkstyle-result.xml;
+;checkstyle-checker.xml;

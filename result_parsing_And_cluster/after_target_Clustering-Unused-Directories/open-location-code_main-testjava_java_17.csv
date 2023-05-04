@@ -1,0 +1,6 @@
+surefire-reports/
+maven-status/
+;openlocationcode-1.0.4-sources.jar;
+;openlocationcode-1.0.4-javadoc.jar;
+;openlocationcode-1.0.4.jar;
+javadoc-bundle-options/;javadoc-options-javadoc-resources.xml;

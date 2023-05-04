@@ -1,0 +1,5 @@
+classes/
+test-classes/
+surefire/
+;mcMMO.jar;
+maven-archiver/

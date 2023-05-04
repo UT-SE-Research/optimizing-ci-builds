@@ -1,0 +1,5 @@
+classes/org/kohsuke/github/connector/;GitHubConnectorResponse.class;
+classes/org/kohsuke/github/connector/;GitHubConnectorResponse$ByteArrayResponse.class;
+classes/org/kohsuke/github/connector/;GitHubConnectorRequest.class;
+classes/org/kohsuke/github/connector/;GitHubConnector.class;
+classes/META-INF/annotations/

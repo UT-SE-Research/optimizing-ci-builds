@@ -1,0 +1,10 @@
+apidocs/
+test-classes/
+classes/
+surefire/;surefirebooter3054491122258449942.jar;
+surefire/;surefire5631339522364867816tmp;
+surefire/;surefire_01792395177343240122tmp;
+;pmd.xml;
+;maven-pmd-plugin-default.xml;
+maven-archiver/
+javadoc-bundle-options/;package-list;

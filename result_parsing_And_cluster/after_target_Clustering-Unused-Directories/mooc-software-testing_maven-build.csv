@@ -1,0 +1,8 @@
+site/
+jacoco-ut/
+surefire-reports/
+maven-status/
+;testing-mooc-1.0-SNAPSHOT.jar;
+test-classes/tudelft/roman/;RomanNumeralTestWithBeforeEach.class;
+test-classes/tudelft/chocolate/;ChocolateBagsTest3.class;
+test-classes/tudelft/chocolate/;ChocolateBagsTest2.class;

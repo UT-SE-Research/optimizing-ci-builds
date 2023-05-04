@@ -1,0 +1,7 @@
+site/
+surefire-reports/
+maven-status/
+generated-sources/openapi/.openapi-generator/
+generated-sources/openapi/;README.md;
+generated-sources/openapi/;pom.xml;
+generated-sources/openapi/;.openapi-generator-ignore;

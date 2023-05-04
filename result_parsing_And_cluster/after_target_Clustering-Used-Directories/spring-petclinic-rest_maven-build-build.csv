@@ -1,0 +1,8 @@
+classes/
+generated-sources/openapi/src/
+test-classes/
+generated-sources/annotations/
+surefire/
+;spring-petclinic-rest-2.6.2.jar;
+maven-archiver/
+;jacoco.exec;

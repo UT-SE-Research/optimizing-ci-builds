@@ -1,0 +1,6 @@
+surefire-reports/
+maven-status/
+;ums.jar;
+;ums-11.4.1-SNAPSHOT-distribution.tar.gz;
+test-classes/net/pms/test/;Issue1278.class;
+;extra.nsh;

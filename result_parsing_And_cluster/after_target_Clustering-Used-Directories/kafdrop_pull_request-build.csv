@@ -1,0 +1,5 @@
+classes/
+test-classes/kafdrop/
+surefire/
+maven-archiver/
+failsafe-reports/;failsafe-summary.xml;

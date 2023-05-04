@@ -1,0 +1,6 @@
+surefire-reports/
+maven-status/
+site/
+;checkstyle-result.xml;
+;checkstyle-header.txt;
+;checkstyle-cachefile;

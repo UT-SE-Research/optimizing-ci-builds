@@ -1,0 +1,6 @@
+test-classes/
+surefire/;surefirebooter-20230331020530111_3.jar;
+surefire/;surefire-20230331020530111_1tmp;
+surefire/;surefire_0-20230331020530111_2tmp;
+surefire-reports/;io.cucumber.skeleton.RunCucumberTest.txt;
+classes/
