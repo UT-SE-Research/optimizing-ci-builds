@@ -24,6 +24,14 @@ do
 
     filename_prefix=$(echo $line | cut -d',' -f5 |cut -d'.' -f1)
     org_unused_dir=$(echo $line | cut -d',' -f6 |cut -d'/' -f2)
+
+
+    if [[ "${org_unused_dir}" == "maven-status" ]]; then
+        #echo "Not-Running-Dynamic=>$unused_csv_file,$workflow_file,$unused_dir,from-some-compiler-plugin" >> "$currentDir/Result.csv"
+        rule_set=$((rule_set + 1))
+        continue
+    fi
+
     all_used_files=($(find $2 -name "${filename_prefix}*_used*${org_unused_dir}.txt"))
     all_unused_files=($(find $2 -name "${filename_prefix}*_unused*${org_unused_dir}.txt"))
 
@@ -73,7 +81,7 @@ do
         fi
     done
 
-    echo "$filename_prefix", "$org_unused_dir", "${disable_one_used}, $disable_m_used , $disable_one_unused, $disable_m_unused,  $disable_m_both_used_unused" >> dynamic-characterstic.csv
+    echo "$filename_prefix","$org_unused_dir","${disable_one_used},$disable_m_used,$disable_one_unused,$disable_m_unused,$disable_m_both_used_unused" >> dynamic-characterstic.csv
     #echo "$filename_prefix and unused_dir= $unused_dir"
 
     #exit
