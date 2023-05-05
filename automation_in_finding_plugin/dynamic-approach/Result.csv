@@ -1,6 +1,14 @@
-FROM STATIC=>target/surefire-reports/,Algorithms_check-build-Test.csv,.github/workflows/check.yml,target/surefire-reports/,maven-surefire-plugin#,1
+FROM STATIC=>target/.wro4j/,spring-framework-petclinic_maven-build-build.csv,.github/workflows/maven-build.yml,target/.wro4j/,ro.isdc.wro4j#wro4j-maven-plugin,1
+FROM STATIC=>target/cache/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/cache/,maven-site-plugin#,1
+FROM STATIC=>target/docker-ready/,kafdrop_pull_request-build.csv,.github/workflows/pull_request.yml,target/docker-ready/,maven-resources-plugin#,1
+FROM STATIC=>target/jacoco-ut/,mooc-software-testing_maven-build.csv,.github/workflows/maven.yml,target/jacoco-ut/,org.jacoco#jacoco-maven-plugin,1
+FROM STATIC=>target/japicmp/,github-api_maven-build-test_os_ubuntu_java_11.csv,.github/workflows/maven-build.yml,target/japicmp/,com.github.siom79.japicmp#japicmp-maven-plugin,1
+FROM STATIC=>target/japicmp/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/japicmp/,com.github.siom79.japicmp#japicmp-maven-plugin,1
+FROM STATIC=>target/site/,github-api_maven-build-site_java_11.csv,.github/workflows/maven-build.yml,target/site/,maven-site-plugin#,1
 FROM STATIC=>target/site/,github-api_maven-build-test_os_ubuntu_java_11.csv,.github/workflows/maven-build.yml,target/site/,maven-site-plugin#,1
-target/cache/,github-api_maven-build-test_os_ubuntu_java_11.csv,.github/workflows/maven-build.yml,target/cache/,com.infradna.tool#bridge-method-injector,10
+FROM STATIC=>target/site/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/site/,maven-site-plugin#,1
+FROM STATIC=>target/site/,mooc-software-testing_maven-build.csv,.github/workflows/maven.yml,target/site/,maven-site-plugin#,1
+FROM STATIC=>target/surefire-reports/,Algorithms_check-build-Test.csv,.github/workflows/check.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,JSqlParser_maven-build_java_11.csv,.github/workflows/maven.yml,target/surefire-reports/,maven-surefire-plugin#,4
 FROM STATIC=>target/surefire-reports/,JSqlParser_maven-build_java_8.csv,.github/workflows/maven.yml,target/surefire-reports/,maven-surefire-plugin#,4
 FROM STATIC=>target/surefire-reports/,Mybatis-PageHelper_pull-request-mvnverify.csv,.github/workflows/pull-request.yml,target/surefire-reports/,maven-surefire-plugin#,1
@@ -9,28 +17,30 @@ FROM STATIC=>target/surefire-reports/,UniversalMediaServer_ci.yaml-linuxfocal_ja
 FROM STATIC=>target/surefire-reports/,fabric-sdk-java_build-test_java-version_11.csv,.github/workflows/build.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,fabric-sdk-java_build-test_java-version_17.csv,.github/workflows/build.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,fabric-sdk-java_build-test_java-version_8.csv,.github/workflows/build.yml,target/surefire-reports/,maven-surefire-plugin#,1
-FROM STATIC=>target/japicmp/,github-api_maven-build-test_os_ubuntu_java_11.csv,.github/workflows/maven-build.yml,target/japicmp/,com.github.siom79.japicmp#japicmp-maven-plugin,1
-FROM STATIC=>target/surefire-reports/,github-api_maven-build-test_os_ubuntu_java_11.csv,.github/workflows/maven-build.yml,target/surefire-reports/,maven-project-info-reports-plugin#,4
-FROM STATIC=>target/site/,github-api_maven-build-site_java_11.csv,.github/workflows/maven-build.yml,target/site/,maven-site-plugin#,1
-FROM STATIC=>target/cache/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/cache/,maven-site-plugin#,1
-FROM STATIC=>target/japicmp/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/japicmp/,com.github.siom79.japicmp#japicmp-maven-plugin,1
-FROM STATIC=>target/site/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/site/,maven-site-plugin#,1
-FROM STATIC=>target/surefire-reports/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/surefire-reports/,maven-surefire-plugin#,2
-target/cache/,github-api_maven-build-test8_os_ubuntu_java_8.csv,.github/workflows/maven-build.yml,target/cache/,com.infradna.tool#bridge-method-injector,10
 FROM STATIC=>target/surefire-reports/,github-api_maven-build-test8_os_ubuntu_java_8.csv,.github/workflows/maven-build.yml,target/surefire-reports/,maven-surefire-plugin#,2
+FROM STATIC=>target/surefire-reports/,github-api_maven-build-test_os_ubuntu_java_11.csv,.github/workflows/maven-build.yml,target/surefire-reports/,maven-project-info-reports-plugin#,4
+FROM STATIC=>target/surefire-reports/,github-api_maven-build-test_os_ubuntu_java_17.csv,.github/workflows/maven-build.yml,target/surefire-reports/,maven-surefire-plugin#,2
 FROM STATIC=>target/surefire-reports/,junit4_main-buildandverify_java_11.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,junit4_main-buildandverify_java_17.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,junit4_main-buildandverify_java_18.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,junit4_main-buildandverify_java_8.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
-FROM STATIC=>target/docker-ready/,kafdrop_pull_request-build.csv,.github/workflows/pull_request.yml,target/docker-ready/,maven-resources-plugin#,1
 FROM STATIC=>target/surefire-reports/,kafdrop_pull_request-build.csv,.github/workflows/pull_request.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,matsim-example-project_maven-build.csv,.github/workflows/maven.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,mcMMO_maven-compile.csv,.github/workflows/maven.yml,target/surefire-reports/,maven-surefire-plugin#,1
-FROM STATIC=>target/jacoco-ut/,mooc-software-testing_maven-build.csv,.github/workflows/maven.yml,target/jacoco-ut/,org.jacoco#jacoco-maven-plugin,1
-FROM STATIC=>target/site/,mooc-software-testing_maven-build.csv,.github/workflows/maven.yml,target/site/,maven-site-plugin#,1
 FROM STATIC=>target/surefire-reports/,mooc-software-testing_maven-build.csv,.github/workflows/maven.yml,target/surefire-reports/,maven-surefire-plugin#,2
 FROM STATIC=>target/surefire-reports/,open-location-code_main-testjava_java_11.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,open-location-code_main-testjava_java_16.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,open-location-code_main-testjava_java_17.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,open-location-code_main-testjava_java_8.csv,.github/workflows/main.yml,target/surefire-reports/,maven-surefire-plugin#,1
 FROM STATIC=>target/surefire-reports/,socket.io-client-java_ci-verify_java_11.csv,.github/workflows/ci.yml,target/surefire-reports/,maven-surefire-plugin#,1
+FROM STATIC=>target/surefire-reports/,socket.io-client-java_ci-verify_java_7.csv,.github/workflows/ci.yml,target/surefire-reports/,maven-surefire-plugin#,1
+FROM STATIC=>target/surefire-reports/,socket.io-client-java_ci-verify_java_8.csv,.github/workflows/ci.yml,target/surefire-reports/,maven-surefire-plugin#,1
+FROM STATIC=>target/surefire-reports/,soot_ci-BuildAndTest_java_version_11.csv,.github/workflows/ci.yml,target/surefire-reports/,maven-surefire-plugin#,3
+FROM STATIC=>target/surefire-reports/,soot_ci-BuildAndTest_java_version_8.csv,.github/workflows/ci.yml,target/surefire-reports/,maven-surefire-plugin#,3
+FROM STATIC=>target/surefire-reports/,soot_ci-BuildAndTest_java_version_9.csv,.github/workflows/ci.yml,target/surefire-reports/,maven-surefire-plugin#,3
+FROM STATIC=>target/surefire-reports/,spring-framework-petclinic_maven-build-build.csv,.github/workflows/maven-build.yml,target/surefire-reports/,maven-surefire-plugin#,1
+FROM STATIC=>target/surefire-reports/,spring-petclinic-rest_maven-build-build.csv,.github/workflows/maven-build.yml,target/surefire-reports/,maven-surefire-plugin#,2
+target/cache/,github-api_maven-build-test8_os_ubuntu_java_8.csv,.github/workflows/maven-build.yml,target/cache/,com.infradna.tool#bridge-method-injector,10
+target/cache/,github-api_maven-build-test_os_ubuntu_java_11.csv,.github/workflows/maven-build.yml,target/cache/,com.infradna.tool#bridge-method-injector,10
+target/site/,spring-framework-petclinic_maven-build-build.csv,.github/workflows/maven-build.yml,target/site/,org.jacoco#jacoco-maven-plugin,8
+target/site/,spring-petclinic-rest_maven-build-build.csv,.github/workflows/maven-build.yml,target/site/,org.jacoco#jacoco-maven-plugin,6

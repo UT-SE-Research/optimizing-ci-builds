@@ -148,9 +148,11 @@ do
         echo $plugin
         if [[ "$unused_dir" == "target/surefire-reports/" && "$plugin" == "maven-surefire-plugin" ]] ; then
             ${mvn_command} --file effective-pom.xml -Dsurefire.useFile=false -DdisableXmlReport=true > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
-            if ! test -e target/surefire-reports/*; then
-                echo "No files in directory"
-                rm -rf target/surefire-reports/
+            if [[ -d "target/surefire-reports" ]]; then
+                if ! test -e target/surefire-reports/*; then
+                    echo "No files in directory"
+                    rm -rf target/surefire-reports/
+                fi
             fi
             echo "I AM WITHIN surefire-report**"
         else
