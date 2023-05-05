@@ -17,6 +17,7 @@ rule_set=0
 mkdir "RQ2-PR-Category"
 while read line  # looping through each of the unnnecessary directory
 do 
+    plugin_tried=0
     plugin_which_generates_unused_dir_found=0
     proj_name=$(echo $line | cut -d',' -f1)
     workflow_file=$(echo $line | cut -d',' -f2)
@@ -26,11 +27,11 @@ do
     unused_dir=$(echo $line | cut -d',' -f6)
     plugins=($(echo $line | sed -e 's/.*{\(.*\)}.*/\1/' | tr -d ' ' | tr ',' '\n' |  sed -e 's/"\([^"]*\)":/\1=/g' | cut -d'=' -f1)) # all the plugins that are found by static approach
     #echo "plugins =${plugins[@]}"
-    if [[ "$unused_dir" == "target/surefire-reports/" ]]; then
+    #if [[ "$unused_dir" == "target/surefire-reports/" ]]; then
         #echo "Not-Running-Dynamic=>$unused_csv_file,$workflow_file,$unused_dir,-DdisableXmlReport=true" >> "$currentDir/Result.csv"
-        rule_set=$((rule_set + 1))
-        continue
-    elif [[ "$unused_dir" == "target/maven-status/" ]]; then
+    #    rule_set=$((rule_set + 1))
+    #    continue
+    if [[ "$unused_dir" == "target/maven-status/" ]]; then
         #echo "Not-Running-Dynamic=>$unused_csv_file,$workflow_file,$unused_dir,from-some-compiler-plugin" >> "$currentDir/Result.csv"
         rule_set=$((rule_set + 1))
         continue
@@ -143,7 +144,18 @@ do
         mvn -version 
         echo $JAVA_HOME
         echo ${mvn_command} 
-        ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
+        echo "$unused_dir"
+        echo $plugin
+        if [[ "$unused_dir" == "target/surefire-reports/" && "$plugin" == "maven-surefire-plugin" ]] ; then
+            ${mvn_command} --file effective-pom.xml -Dsurefire.useFile=false -DdisableXmlReport=true > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
+            if ! test -e target/surefire-reports/*; then
+                echo "No files in directory"
+                rm -rf target/surefire-reports/
+            fi
+            echo "I AM WITHIN surefire-report**"
+        else
+            ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt"
+        fi
         cp "effective-pom_org.xml" "effective-pom.xml"
         compile_err=$(grep -ir "COMPILATION ERROR" "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${ss_plugin_line}.txt" | wc -l)
 
@@ -161,6 +173,7 @@ do
                continue
             
             else
+                plugin_tried=$((plugin_tried+1))
                 echo "FIRST I am HERE************"
                 ### Look for other useful files/Dir in target dir
                 all_used_file=($(cat $currentDir/$2/$unused_csv_file)) #I am using the same name $unused_csv_file because with the same name another file exists in ../../result_parsing_And_cluster/Clustering-Used-Directories/
@@ -196,10 +209,10 @@ do
                 
                 if [ "$(find "target" -name $last_level_dir | wc -l)" -gt 0 ]; then # directory found
                     echo "Still-exists"
-                    echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Found-Dir.csv"
+                    echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId,$plugin_tried" >> "$currentDir/Found-Dir.csv"
                 else
                     echo "not found from"
-                    echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Result.csv"
+                    echo "FROM STATIC=>$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId,$plugin_tried" >> "$currentDir/Result.csv"
                     plugin_which_generates_unused_dir_found=1
                     break
                 fi
@@ -263,7 +276,13 @@ do
             mvn -version
             echo $JAVA_HOME
             echo ${mvn_command} 
-            ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt"
+
+            if [[ "$unused_dir" == "target/surefire-reports/" && "$plugin" == "maven-surefire-plugin" ]] ; then
+                ${mvn_command} --file effective-pom.xml -DdisableXmlReport=true >  "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt"
+            else
+                ${mvn_command} --file effective-pom.xml > "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt"
+            fi
+
             cp effective-pom_org.xml effective-pom.xml
             compile_err=$(grep -ir "COMPILATION ERROR"  "$currentDir/$logs/${proj_name}_log_${last_level_dir}_${plugin_start}.txt" | wc -l)
             echo "compile err=${compile_err}"
@@ -278,6 +297,7 @@ do
                    echo "I GOT Unknown Packaging"
                    continue
                 else
+                    plugin_tried=$((plugin_tried+1))
                     echo "I am HERE************"
                     unranked_plugin_count=$((unranked_plugin_count +1))
                     ### Look for other useful files/Dir in target dir
@@ -322,14 +342,14 @@ do
 
                     if [ -n "$(find "target" -name $last_level_dir)" ]; then 
                         echo "Still found"
-                        echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Found-Dir.csv"
+                        echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId,$plugin_tried" >> "$currentDir/Found-Dir.csv"
                     else
                         echo "not-found"
                         echo $Start_range
                         echo $end_range
                         echo "start=$plugin_start, end=$plugin_end, $workflow_file, $java_version,$groupId#$artifactId"
                         #find the plugin name
-                        echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId" >> "$currentDir/Result.csv"
+                        echo "$unused_dir,$unused_csv_file,$workflow_file,$unused_dir,$groupId#$artifactId,$plugin_tried" >> "$currentDir/Result.csv"
                         break
                     fi
                fi
