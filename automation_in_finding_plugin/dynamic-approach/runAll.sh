@@ -356,5 +356,6 @@ do
             fi
         done
     fi
+    cd $currentDir
 done < $1
 echo $rule_set
