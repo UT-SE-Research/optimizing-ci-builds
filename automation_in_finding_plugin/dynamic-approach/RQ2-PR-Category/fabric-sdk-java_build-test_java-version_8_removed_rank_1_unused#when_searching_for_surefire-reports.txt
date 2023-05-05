@@ -1,0 +1,10 @@
+site/jacoco-ut/
+site/jacoco-it/
+site/jacoco-aggregate/
+surefire-reports/
+protoc-dependencies/3790579ddd42fac6b0a5f20e862268c7/
+protoc-dependencies/50da99470bb43f5e74733c0b7556027f/
+;maven-javadoc-plugin-stale-data.txt;
+failsafe-reports/;TEST-org.hyperledger.fabric.sdkintegration.IntegrationSuite.xml;
+failsafe-reports/;org.hyperledger.fabric.sdkintegration.IntegrationSuite.txt;
+;checkstyle-cachefile;

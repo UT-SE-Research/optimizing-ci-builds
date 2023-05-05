@@ -1,0 +1,5 @@
+;jsqlparser-4.6-SNAPSHOT-sources.jar;
+;jsqlparser-4.6-SNAPSHOT-javadoc.jar;
+;jsqlparser-4.6-SNAPSHOT.jar;
+javadoc-bundle-options/;javadoc-options-javadoc-resources.xml;
+;checkstyle-cachefile;

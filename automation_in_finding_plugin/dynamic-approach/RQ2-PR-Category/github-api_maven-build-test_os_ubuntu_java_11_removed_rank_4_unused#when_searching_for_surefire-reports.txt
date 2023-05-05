@@ -1,0 +1,17 @@
+site/
+surefire-reports/
+cache/
+maven-status/
+japicmp/
+test-classes/;slow-or-flaky-tests.txt;
+test-classes/org/kohsuke/;HookApp.class;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;watch.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;team_add.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;release.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;page_build.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;milestone.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;membership.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;member.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;label.json;
+test-classes/org/kohsuke/github/GHEventPayloadTest/;gollum.json;
+;spotbugs.xml;

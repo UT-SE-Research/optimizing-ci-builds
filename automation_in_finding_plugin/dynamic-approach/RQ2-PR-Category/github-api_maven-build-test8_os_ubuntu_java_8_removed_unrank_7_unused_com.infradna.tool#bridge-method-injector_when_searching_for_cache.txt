@@ -1,0 +1,14 @@
+site/jacoco-it/org.kohsuke.github/
+cache/
+site/jacoco-it/jacoco-resources/
+site/jacoco-it/org.kohsuke.github.internal/
+site/jacoco-it/org.kohsuke.github.authorization/
+site/jacoco-it/org.kohsuke.github.example.dataobject/
+site/jacoco-it/org.kohsuke.github.connector/
+site/jacoco-it/org.kohsuke.github.extras.okhttp3/
+site/jacoco-it/org.kohsuke.github.extras.authorization/
+site/jacoco-it/org.kohsuke.github.extras/
+;spotbugs.xml;
+site/jacoco-it/;jacoco-sessions.html;
+site/jacoco-it/;jacoco.csv;
+site/jacoco-it/;index.html;

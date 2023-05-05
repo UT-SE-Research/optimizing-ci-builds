@@ -1,1 +1,8 @@
-apidocs/
+javacc-1680158240289/node/
+surefire/
+;pmd.xml;
+;jsqlparser-4.6-SNAPSHOT.jar;
+;jacoco.exec;
+;checkstyle-rules.xml;
+;checkstyle-result.xml;
+;checkstyle-checker.xml;

@@ -1,0 +1,4 @@
+;jsqlparser-4.6-SNAPSHOT-sources.jar;
+;jsqlparser-4.6-SNAPSHOT-javadoc.jar;
+;jsqlparser-4.6-SNAPSHOT.jar;
+;checkstyle-cachefile;

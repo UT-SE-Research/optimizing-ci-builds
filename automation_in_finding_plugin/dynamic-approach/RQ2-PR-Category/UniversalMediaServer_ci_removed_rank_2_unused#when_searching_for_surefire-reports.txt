@@ -1,0 +1,8 @@
+surefire-reports/
+;ums.jar;
+;ums-11.4.1-SNAPSHOT-distribution.tar.gz;
+;extra.nsh;
+surefire-reports/
+;ums.jar;
+;ums-11.4.1-SNAPSHOT-distribution.tar.gz;
+;extra.nsh;

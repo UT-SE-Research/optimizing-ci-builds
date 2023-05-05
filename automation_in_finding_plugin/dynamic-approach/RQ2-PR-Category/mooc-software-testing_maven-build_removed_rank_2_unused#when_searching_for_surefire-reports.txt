@@ -1,0 +1,4 @@
+site/
+jacoco-ut/
+surefire-reports/
+;testing-mooc-1.0-SNAPSHOT.jar;

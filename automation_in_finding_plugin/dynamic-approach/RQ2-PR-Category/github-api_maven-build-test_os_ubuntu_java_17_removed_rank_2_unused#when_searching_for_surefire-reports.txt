@@ -1,0 +1,4 @@
+site/
+surefire-reports/
+japicmp/
+;spotbugs.xml;

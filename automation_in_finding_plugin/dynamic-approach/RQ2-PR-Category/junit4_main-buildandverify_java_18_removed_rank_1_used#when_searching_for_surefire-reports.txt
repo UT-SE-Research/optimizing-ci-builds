@@ -1,0 +1,6 @@
+surefire/
+site/javadoc/latest/;packages;
+site/javadoc/latest/;options;
+site/apidocs/;packages;
+site/apidocs/;options;
+javadoc-bundle-options/;package-list;

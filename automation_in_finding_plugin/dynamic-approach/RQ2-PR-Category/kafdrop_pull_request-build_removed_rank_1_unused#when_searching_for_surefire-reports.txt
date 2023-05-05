@@ -1,0 +1,2 @@
+surefire-reports/
+;kafdrop-3.31.0-SNAPSHOT.jar;

@@ -1,1 +1,6 @@
-classes/
+surefire/
+;spotbugsXml.xml;
+;spotbugsTemp.xml;
+maven-archiver/
+;jacoco-it.exec;
+;github-api-1.309-SNAPSHOT.jar;

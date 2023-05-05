@@ -1,0 +1,7 @@
+surefire/
+coverage-reports/
+jacoco-merged/
+failsafe-reports/;failsafe-summary.xml;
+;fabric-sdk-java-2.2.16.jar;
+;checkstyle-result.xml;
+;checkstyle-checker.xml;

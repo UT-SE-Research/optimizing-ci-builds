@@ -1,0 +1,2 @@
+docker-ready/
+;kafdrop-3.31.0-SNAPSHOT.jar;

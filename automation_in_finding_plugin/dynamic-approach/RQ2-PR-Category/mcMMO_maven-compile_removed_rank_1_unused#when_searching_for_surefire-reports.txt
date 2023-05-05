@@ -1,0 +1,3 @@
+surefire-reports/
+;mcMMO-bin.zip;
+;mcMMO-2.1.218-SNAPSHOT-shaded.jar;

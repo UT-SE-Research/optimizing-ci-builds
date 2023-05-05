@@ -1,0 +1,9 @@
+apidocs/
+javacc-1680158200989/node/
+surefire/
+;pmd.xml;
+javadoc-bundle-options/;package-list;
+;jacoco.exec;
+;checkstyle-rules.xml;
+;checkstyle-result.xml;
+;checkstyle-checker.xml;
