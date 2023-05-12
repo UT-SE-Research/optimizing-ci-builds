@@ -242,7 +242,7 @@ def divide_yaml(yaml_string):
     return new_yaml_files
 
         
-def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time, job_with_matrix, default_python_version):
+def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time, job_with_matrix, default_python_version, forked_owner, analyzer_owner,ci_analyzer_branch):
     new_yaml_file: str = ""
     indent = 0
     job_indent = 0
@@ -343,7 +343,7 @@ def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time, job_wit
                     new_yaml_file += " " * (in_step_indent + 2) + "with:\n"
                     new_yaml_file += " " * (in_step_indent + 4) + f"path: {repo}\n"
                     new_yaml_file += " " * (in_step_indent + 4) + f"ref: '{time}'\n"
-                    new_yaml_file += " " * (in_step_indent + 4) + "repository: 'UT-SE-Research/ci-analyzes'\n"
+                    new_yaml_file += " " * (in_step_indent + 4) + f"repository: '{analyzer_owner}/{ci_analyzer_branch}'\n"
                     new_yaml_file += " " * (in_step_indent + 4) + "token: '${{ secrets.API_TOKEN_GITHUB }}'\n"
                     new_yaml_file += " " * (in_step_indent + 4) + "persist-credentials: true\n"
                     # Push the log to another repository
@@ -352,13 +352,13 @@ def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time, job_wit
                     new_yaml_file += " " * (in_step_indent + 2) + "run: |\n"
                     new_yaml_file += " " * (in_step_indent + 4) + f"mkdir -p {repo}/{repo}/{file_path.replace('.yml', '')}/{job_name}{append_to_target_dir}\n"
                     new_yaml_file += " " * (in_step_indent + 4) + f"cp -rvT optimizing-ci-builds-ci-analysis {repo}/{repo}/{file_path.replace('.yml', '')}/{job_name}{append_to_target_dir}\n"
-                    new_yaml_file += " " * (in_step_indent) + f"- run: echo https://github.com/UT-SE-Research/ci-analyzes/tree/{time}/{repo}/{file_path.replace('.yml', '')}/{job_name}{append_to_target_dir}\n"
+                    new_yaml_file += " " * (in_step_indent) + f"- run: echo https://github.com/{analyzer_owner}/{ci_analyzer_branch}/tree/{time}/{repo}/{file_path.replace('.yml', '')}/{job_name}{append_to_target_dir}\n"
                     new_yaml_file += " " * (in_step_indent) + "- name: Pushes analysis to another repository\n"
                     new_yaml_file += " " * (in_step_indent + 2) + f"if: always()\n"
                     new_yaml_file += " " * (in_step_indent + 2) + f"working-directory: {repo}\n"
                     new_yaml_file += " " * (in_step_indent + 2) + "run: |\n"
                     new_yaml_file += " " * (in_step_indent + 4) + "commit_message=$GITHUB_REPOSITORY@$GITHUB_WORKFLOW_SHA\n"
-                    new_yaml_file += " " * (in_step_indent + 4) + "git config --global user.name 'UT-SE-Research'\n"
+                    new_yaml_file += " " * (in_step_indent + 4) + f"git config --global user.name '{analyzer_owner}'\n"
                     new_yaml_file += " " * (in_step_indent + 4) + "git config --global user.email '${{ secrets.EMAIL }}'\n"
                     new_yaml_file += " " * (in_step_indent + 4) + "git add .\n"
                     new_yaml_file += " " * (in_step_indent + 4) + "git commit -m $commit_message\n"
@@ -417,7 +417,7 @@ def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time, job_wit
                 new_yaml_file += " " * (in_step_indent + 4) + "pip install numpy\n"
                 new_yaml_file += " " * (in_step_indent) + "- run: sudo apt update\n"
                 new_yaml_file += " " * (in_step_indent) + "- run: sudo apt install inotify-tools\n"
-                new_yaml_file += " " * (in_step_indent) + f"- run: inotifywait -mr /home/runner/work/{repo}/{repo}/ --format '%T;%w;%f;%e' --timefmt %T -o /home/runner/inotify-logs.csv & echo 'optimizing-ci-builds'\n"
+                new_yaml_file += " " * (in_step_indent) + f"- run: inotifywait -mr /home/runner/work/{repo}/{repo}/ --format '%T;%w;%f;%e' --timefmt %T -o /home/runner/inotify-logs.csv\n"
                 continue
 
             if in_on:
@@ -450,12 +450,6 @@ def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time, job_wit
             if re.search(r"-\s+", last_line):
                 new_last_line = re.sub(r"-\s+", "- ", last_line)
                 new_yaml_file = re.sub(last_line, new_last_line, new_yaml_file)
-    # print("Saving the new yaml file: ", f"{file_path}")
-    # f"{file_path}" if this directory does not exist, it will create it
-    # if not os.path.exists(os.path.dirname(f"{file_path}")):
-    #     os.makedirs(os.path.dirname(f"{file_path}"))
-    # with open (f"{file_path}", "w") as f:
-    #     f.write(new_yaml_file)
     return new_yaml_file
 
 
@@ -464,7 +458,6 @@ def load_yaml(yaml_file: str):
     return loaded_yaml
 
 def get_job_with_matrix(loaded_yaml):
-    # loaded_yaml = ruamel.yaml.safe_load(yaml_file)
     jobs_names = list(loaded_yaml["jobs"].keys()) 
     
     # create a dict with the job names that has matrix
