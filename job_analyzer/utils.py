@@ -417,7 +417,7 @@ def configure_yaml_file(yaml_file: str, repo: str, file_path: str, time, job_wit
                 new_yaml_file += " " * (in_step_indent + 4) + "pip install numpy\n"
                 new_yaml_file += " " * (in_step_indent) + "- run: sudo apt update\n"
                 new_yaml_file += " " * (in_step_indent) + "- run: sudo apt install inotify-tools\n"
-                new_yaml_file += " " * (in_step_indent) + f"- run: inotifywait -mr /home/runner/work/{repo}/{repo}/ --format '%T;%w;%f;%e' --timefmt %T -o /home/runner/inotify-logs.csv\n"
+                new_yaml_file += " " * (in_step_indent) + f"- run: inotifywait -mr /home/runner/work/{repo}/{repo}/ --format '%T;%w;%f;%e' --timefmt %T -o /home/runner/inotify-logs.csv &\n"
                 continue
 
             if in_on:

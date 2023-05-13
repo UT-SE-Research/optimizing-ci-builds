@@ -16,12 +16,12 @@ def main():
             """FORKING THE PROJECT (VIA GITHUB API)"""
             """PARSING THE YAML FILE"""
             """CHANGING THE YAML FILE"""
-            forked_owner: str = "optimizing-ci-builds"
-            analyzer_owner: str = "UT-SE-Research"
+            forked_owner: str = os.environ["FORKED_OWNER"]
+            analyzer_owner: str = os.environ["ANALYZER_OWNER"]
             repo: str = repository["name"].split("/")[1]
             print(f"\nRunning tests on {forked_owner}/{repo}")
             default_branch: str = repository["default_branch"]
-            ci_analyzer_branch: str = "ci-analyzes"
+            ci_analyzer_repo: str = os.environ["CI_ANALYZER_REPO"]
 
             try:
                 sha: str = utils.retrieve_sha(owner=forked_owner, repo=repo, default_branch=default_branch)
@@ -48,7 +48,7 @@ def main():
                 job_with_matrix = utils.get_job_with_matrix(loaded_yaml)   
                 default_python_version = utils.get_python_version(loaded_yaml)             
                 branch_name=str(time1)+'-'+commit
-                configured_yaml = utils.configure_yaml_file(yaml_file, repo, file_path, branch_name, job_with_matrix, default_python_version, forked_owner, analyzer_owner,ci_analyzer_branch)
+                configured_yaml = utils.configure_yaml_file(yaml_file, repo, file_path, branch_name, job_with_matrix, default_python_version, forked_owner, analyzer_owner,ci_analyzer_repo)
                 configured_yaml_files.append(configured_yaml)
                 yaml_shas.append(yaml_sha)
             utils.retrieve_sha_ci_analyzes(analyzer_owner, repo, branch_name)
