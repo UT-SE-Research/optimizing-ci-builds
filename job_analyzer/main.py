@@ -22,14 +22,16 @@ def main():
             print(f"\nRunning tests on {forked_owner}/{repo}")
             default_branch: str = repository["default_branch"]
             ci_analyzer_repo: str = os.environ["CI_ANALYZER_REPO"]
+            add_secrets = os.environ.get('ADD_SECRETS', False)
 
             try:
                 sha: str = utils.retrieve_sha(owner=forked_owner, repo=repo, default_branch=default_branch)
             except ValueError as error:
                 print(error)
                 pass
-
-            # utils.add_secret(owner=forked_owner, repo=repo)
+            
+            if add_secrets:
+                utils.add_secret(owner=forked_owner, repo=repo)
 
             yml_files_path = repository["Github Actions"].split(";")
             yml_files_path = [i for i in yml_files_path if i]
