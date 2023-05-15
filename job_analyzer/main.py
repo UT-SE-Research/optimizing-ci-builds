@@ -31,7 +31,12 @@ def main():
                 pass
             
             if add_secrets:
-                utils.add_secret(owner=forked_owner, repo=repo)
+                try:
+                    utils.add_secret(owner=forked_owner, repo=repo)
+                except Exception as e:
+                    print("exception while adding secret")
+                    print(e)
+                    pass
 
             yml_files_path = repository["Github Actions"].split(";")
             yml_files_path = [i for i in yml_files_path if i]
@@ -53,7 +58,7 @@ def main():
                 configured_yaml = utils.configure_yaml_file(yaml_file, repo, file_path, branch_name, job_with_matrix, default_python_version, forked_owner, analyzer_owner,ci_analyzer_repo)
                 configured_yaml_files.append(configured_yaml)
                 yaml_shas.append(yaml_sha)
-            utils.retrieve_sha_ci_analyzes(analyzer_owner, repo, branch_name)
+            utils.retrieve_sha_ci_analyzes(analyzer_owner, repo, branch_name, ci_analyzer_repo)
             commit_sha = utils.execute(forked_owner, repo, sha, default_branch, yml_files_path, configured_yaml_files, yaml_shas)
 
         except Exception as e:

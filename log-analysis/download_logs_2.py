@@ -8,7 +8,7 @@ import datetime
 
 TOKEN: str = os.environ["G_AUTH_OP"]
 OWNER = "optimizing-ci-builds"
-ci_analyzes_branch = sys.argv[1] #1678918537-5a20a5b, 1678921743-5a20a5b, 1678931171-5a20a5b, 1678940360-bbc60b2
+ci_analyzes_branch = sys.argv[1]
 log_dir = "logs"
 raw_log_dir = "raw_logs"
 analysis_dir = "analysis"
@@ -46,9 +46,7 @@ with open(jobs_file, 'r') as f:
         run_id = row['run_id']
         job_name = row['job_name']
         project = row['project']
-        # workflow_path = row['workflow_path']
         workflow_name = row['workflow_name']
-        # print(f"Downloading logs for {project} for instrumented run with ci_analyzes branch: {ci_analyzes_branch} and run-id: {run_id} for job: {job_name}")
         
         # if the project directory does not exist, create it
         if not os.path.exists(os.path.join(branch_dir, project)):
@@ -92,9 +90,7 @@ with open(jobs_file, 'r') as f:
                         if 'name' in step and 'Run echo' in step['name'] and '/.github/workflows/' in step['name']:
                             # extract the path from the step name
                             path = step['name'].split(' ')[-1]
-                            # path = step['name']
                             break
-                    # writer.writerow([project, sha, workflow, job_name, conclusion, "", runtime, pass_fail_log, "", path])
                     
                     conclusion_wo_instrumentation = ""
                     runtime_wo_instrumentation = ""
@@ -124,38 +120,3 @@ with open(jobs_file, 'r') as f:
                         else:
                             continue
                     writer.writerow([project, sha, workflow, job_name, conclusion, conclusion_wo_instrumentation, runtime, runtime_wo_instrumentation, pass_fail_log, pass_fail_log_wo_instrumentation, path, ""])
- 
-# both_success_count=0
-# only_wo_fail_count=0
-# only_w_fail_count=0
-# both_fail_count = 0
-# with open(os.path.join(analysis_dir, f"{ci_analyzes_branch}.csv"), 'r') as f:
-#     reader = csv.reader(f)
-#     for row in reader:
-#         project = row[0]
-#         sha = row[1]
-#         workflow = row[2]
-#         job_name = row[3]
-#         conclusion = row[4]
-#         conclusion_wo_instrumentation = row[5]
-#         runtime = row[6]
-#         runtime_wo_instrumentation = row[7]
-#         pass_fail_log = row[8]
-#         pass_fail_log_wo_instrumentation = row[9]
-#         path = row[10]
-#         category = row[11]
-        
-#         # count the number of projects that are success in both 4th and 5th column
-#         if conclusion == "success" and conclusion_wo_instrumentation == "success":
-#             both_success_count += 1
-#         if conclusion == "success" and conclusion_wo_instrumentation == "failure":
-#             only_wo_fail_count += 1
-#         if conclusion == "failure" and conclusion_wo_instrumentation == "success":
-#             only_w_fail_count += 1
-#         if conclusion == "failure" and conclusion_wo_instrumentation == "failure":
-#             both_fail_count += 1
-
-# print("both_success_count: " + str(both_success_count))
-# print("only_wo_fail_count: " + str(only_wo_fail_count))
-# print("only_w_fail_count: " + str(only_w_fail_count))
-# print("both_fail_count: " + str(both_fail_count))

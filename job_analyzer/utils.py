@@ -76,8 +76,6 @@ def add_secret(owner: str, repo: str):
         "encrypted_value": value,
         "key_id": key_id
     }
-    response = requests.delete(url=url, headers=headers).json()
-    print(response)
     response = requests.put(url=url, data=json.dumps(body), headers=headers).json()
     print(response)
 
@@ -548,17 +546,17 @@ def split_matrix(yaml_file: str):
     return new_yaml_file
     
 
-def retrieve_sha_ci_analyzes(owner: str, repo: str, time):
-    url = f"https://api.github.com/repos/{owner}/ci-analyzes/branches/main"
+def retrieve_sha_ci_analyzes(owner: str, repo: str, time, ci_analyzer_repo: str):
+    url = f"https://api.github.com/repos/{owner}/{ci_analyzer_repo}/branches/main"
     response = requests.get(url=url, headers=headers).json()
     sha = response['commit']['sha']
-    create_branch_ci_analyzes(owner, repo, sha, time)
+    create_branch_ci_analyzes(owner, repo, sha, time, ci_analyzer_repo)
 
 
-def create_branch_ci_analyzes(owner, repo, sha, time):
+def create_branch_ci_analyzes(owner, repo, sha, time, ci_analyzer_repo):
     url = f"{base_api_url}/repos/{owner}/ci-analyzes/git/refs/heads/optimizing-ci-builds"
     requests.delete(url=url,  headers=headers)
-    url = f"{base_api_url}/repos/{owner}/ci-analyzes/git/refs"
+    url = f"{base_api_url}/repos/{owner}/{ci_analyzer_repo}/git/refs"
     branch_name = f"refs/heads/{time}"
     body = {
             "ref": branch_name,

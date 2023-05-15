@@ -4,11 +4,12 @@
 
 # Declear variables
 ci_analyzes_branch=$1
+ci_analyzes_repo=$2
+ci_analyzes_owner=$3
 replace_logs="false"
 current_dir=$(pwd)
 ci_analyzes_dir=$current_dir/data/ci-analyzes
 projects_dir=$current_dir/data/projects/
-# jobs_file="$current_dir/jobs.csv"
 project_log_dir="$current_dir/raw_logs/$ci_analyzes_branch"
 jobs_file="$project_log_dir/jobs.csv"
 filtered_repositories_file="$current_dir/../data/filtered_repositories.csv"
@@ -18,7 +19,7 @@ mkdir -p $project_log_dir
 # clone/update ci-analyzes
 if [ ! -d $ci_analyzes_dir ]; then
     echo "Cloning ci-analyzes"
-    git clone git@github.com:UT-SE-Research/ci-analyzes.git $ci_analyzes_dir
+    git clone git@github.com:$3/$2.git $ci_analyzes_dir
     cd $ci_analyzes_dir
     git fetch --all
     git checkout $ci_analyzes_branch
