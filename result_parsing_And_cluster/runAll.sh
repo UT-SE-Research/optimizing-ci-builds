@@ -36,7 +36,7 @@ do
     mvn_command=$(echo ${line}  | tr -d '\r' | cut -d',' -f18)
     echo -n ",${mvn_command}" >> "$currentDir/clusters_info.csv"
 
-    workflow_job_name=$(echo ${line} | cut -d',' -f10 | cut -d'/' -f11- | sed 's;\/;-;g') # example, Parsing(https://github.com/UT-SE-Research/ci-analyzes/tree/1680156014-f3221fe/soot/.github/workflows/ci/BuildAndTest)
+    workflow_job_name=$(echo ${line} | cut -d',' -f10 | cut -d'/' -f11- | sed 's;\/;-;g') # example, Parsing(https://github.com/<ci_analyzes_owner>/<ci_analyzes_repo>/tree/<ci_analyzes_branch>/soot/.github/workflows/ci/BuildAndTest)
     echo ",${proj_name}_${workflow_job_name}.csv" >> "$currentDir/clusters_info.csv"
 
     echo "${proj_name}_${workflow_job_name}"
