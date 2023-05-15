@@ -1,3 +1,6 @@
+ci_analyzes_repo=$2
+ci_analyzes_owner=$3
+
 if [[ $1 == "" ]]; then
     echo "Give the csv that is generated from (data/all_successful_job.csv)"
     exit
@@ -10,7 +13,7 @@ currentDir=$(pwd)
 #branch_name=$(echo $1 | rev | cut -d'/' -f1 | rev | cut -d'-' -f2- | cut -d'.' -f1)
 echo $branch_name
 if [[ ! -d "ccc/ci-analyzes" ]]; then
-    git clone https://github.com/UT-SE-Research/ci-analyzes.git 
+    git clone https://github.com/$2/$3.git 
 fi
 
 echo "proj_name,workflow_path,java_version,mvn_command,unused_csv_file"  >> "$currentDir/clusters_info.csv"

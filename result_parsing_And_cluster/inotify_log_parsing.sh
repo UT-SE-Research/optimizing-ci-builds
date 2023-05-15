@@ -1,4 +1,8 @@
 #!/bin/bash
+
+ci_analyzes_repo=$3
+ci_analyzes_owner=$4
+
 if [[ $1 == "" || $2 == "" ]]; then
     #echo "please provide the inotify log(e.g., ci-analyzes/joda-time/.github/workflows/build/build/inotify-logs.csv)"
     echo "please provide the inotify log(e.g., ci-analyzes)"
@@ -30,7 +34,7 @@ do
     #job_name=$(echo ${job_line} | cut -d',' -f4 | sed 's; ;_;g')
     echo "ci-analyzes/$inotify_log" >> "$currentDir/data/all_inotify-logs.csv"
     if [[ ! -d  ci-analyzes ]]; then
-	    git clone https://github.com/UT-SE-Research/ci-analyzes.git 
+	    git clone https://github.com/$3/$4.git 
 	fi
     cd "$currentDir/ci-analyzes"
     git checkout ${branch_name}
