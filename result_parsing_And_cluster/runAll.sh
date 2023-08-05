@@ -42,6 +42,8 @@ do
     echo "${proj_name}_${workflow_job_name}"
     bash make_cluster_for_each_category.sh "${proj_name}_${workflow_job_name}" "Clustering-Unused-Directories" "Unused" "Useful"  # file_name in the inotofy dir ($1_$3), useful file_name in inotify dir ($1_$4), Loop through($1_$3) 
     bash make_cluster_for_each_category.sh "${proj_name}_${workflow_job_name}" "Clustering-Used-Directories" "Useful"  "Unused" 
+
+    bash directory_with_atleast_onefile_is_in_used.sh "${proj_name}_${workflow_job_name}" "Clustering-Both-Used-And-Unused-Directories" "Unused" "Useful"
 done < $1
 
 bash find-immediate-one-dir-after-target.sh Clustering-Unused-Directories Clustering-Unused-Directories/One-level-File-or-directory-after-target.csv
