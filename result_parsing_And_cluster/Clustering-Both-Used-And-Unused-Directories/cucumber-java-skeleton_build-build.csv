@@ -1,0 +1,11 @@
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/gradle/;.gitignore;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/gradle/;gradlew.bat;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/gradle/;.gitignore;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/gradle/;gradlew.bat;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/maven/.mvn/wrapper/;MavenWrapperDownloader.java;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/maven/.mvn/wrapper/;MavenWrapperDownloader.java;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/maven/;.gitignore;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/maven/;mvnw.cmd;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/maven/;.gitignore;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/maven/;mvnw.cmd;
+/home/runner/work/cucumber-java-skeleton/cucumber-java-skeleton/maven/target/surefire-reports/;TEST-io.cucumber.skeleton.RunCucumberTest.xml;

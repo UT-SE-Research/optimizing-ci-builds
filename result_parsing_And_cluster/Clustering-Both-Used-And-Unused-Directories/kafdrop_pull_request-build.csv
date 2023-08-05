@@ -1,0 +1,7 @@
+/home/runner/work/kafdrop/kafdrop/;.gitignore;
+/home/runner/work/kafdrop/kafdrop/;LICENSE;
+/home/runner/work/kafdrop/kafdrop/;README.md;
+/home/runner/work/kafdrop/kafdrop/;kaas_local_jaas.conf;
+/home/runner/work/kafdrop/kafdrop/;mvnw;
+/home/runner/work/kafdrop/kafdrop/;mvnw.cmd;
+/home/runner/work/kafdrop/kafdrop/target/failsafe-reports/;TEST-kafdrop.KafdropIT.xml;
