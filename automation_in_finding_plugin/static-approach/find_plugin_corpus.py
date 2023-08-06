@@ -93,6 +93,9 @@ with open(result_plugin, 'a', newline='') as file:
     writer.writerow(["Proj_name","Workflow","Unused-Dir-Name", "Plugin-Name"])  # Write header
     writer.writerow([sys.argv[3],sys.argv[4],unnecessary_directory, result_plugin_arr])
 
+with open('Result.csv', 'a') as file:
+    file.write(str(result_plugin_arr))
+
 ###SIMILARITY SCORE CALCULATE Based off of the full plugin info
 '''non_zero_matched_plugin_with_unused_dict={}
 plugin=""
