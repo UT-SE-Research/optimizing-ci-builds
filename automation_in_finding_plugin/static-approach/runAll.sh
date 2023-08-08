@@ -6,9 +6,13 @@ fi
 
 currentDir=$(pwd)
 header=true
+result="$currentDir/Result_without_plugin_dependency.csv"
+#result="$currentDir/Result_with_all_plugin_dependency.csv"
 while read line
 do 
     #if [ "$header" = false ]; then 
+    input_upto_colum_five=$(echo $line | cut -d',' -f1-5)
+    echo $input_upto_colum_five
     proj_name=$(echo $line | cut -d',' -f1)
     workflow_file=$(echo $line | cut -d',' -f2)
     java_version=$(echo $line | cut -d',' -f3)
@@ -17,7 +21,11 @@ do
     unused_dirs=$(echo $line | cut -d',' -f6)
     git clone "git@github.com:optimizing-ci-builds/$proj_name" "../projects/$proj_name"
     ###############FIND EFFECTIVE POM#################
-    cd "../projects/$proj_name"
+    if [[ $proj_name == "open-location-code" ]]; then
+        cd "../projects/$proj_name/java"
+    else
+        cd "../projects/$proj_name"
+    fi
     #java_version=$(grep -i "java-version" $workflow_file  | head -1 | cut -d':' -f2 )
     #java_version="${java_version//\'/}"
     #echo $java_version
@@ -35,7 +43,7 @@ do
     fi
     pom_exists=$(find .  -maxdepth 1 -name "pom.xml" | wc -l) #This is needed if the project is not maven based
     if [[ $pom_exists -eq 0 ]]; then
-        echo "$proj_name,$workflow_file,$java_version,$mvn_command,$unused_csv_file-[NOT-MAVEN],${unnecessary_dir}" >> "$currentDir/Result.csv"
+        echo "$proj_name,$workflow_file,$java_version,$mvn_command,$unused_csv_file-[NOT-MAVEN],${unnecessary_dir}" >> "$result"
         continue
     fi
     mvn org.apache.maven.plugins:maven-help-plugin:3.4.0:effective-pom -Doutput=effective-pom.xml
@@ -52,14 +60,21 @@ do
 
             if [[ $semicolon_found_indicates_file -eq 0 ]]; then
                 #echo "UNU $unnecessary_dir"
-                echo -n "$proj_name,$workflow_file,$java_version,$mvn_command,${unused_csv_file},${unnecessary_dir}," >> "$currentDir/Result.csv"
-                python3 find_plugin_corpus.py "../projects/$proj_name/effective-pom.xml" ${unnecessary_dir} $proj_name $workflow_file
+                echo -n "$proj_name,$workflow_file,$java_version,$mvn_command,${unused_csv_file},${unnecessary_dir}," >> "$result"
+
+                if [[ $proj_name == "open-location-code" ]]; then
+                    python3 find_plugin_corpus.py "../projects/$proj_name/java/effective-pom.xml" ${unnecessary_dir} "$input_upto_colum_five" $result
+                else
+                    python3 find_plugin_corpus.py "../projects/$proj_name/effective-pom.xml" ${unnecessary_dir} "$input_upto_colum_five" $result
+                fi
+                #exit
                 #echo "SHANTO*** ${unnecessary_dir}"
-                echo "" >> "$currentDir/Result.csv"
+                echo "" >> "$result"
             fi
         done
     fi
-    #exit
+    cd $currentDir
+    rm -rf "../projects/$proj_name/"
     #fi
     #header=false
 done < $1

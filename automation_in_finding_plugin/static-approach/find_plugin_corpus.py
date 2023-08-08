@@ -11,6 +11,7 @@ import csv
 
 pomFile=sys.argv[1]
 unnecessary_directory=sys.argv[2]
+result_file=sys.argv[4]
 stemmer = PorterStemmer()
 # Load the XML file
 tree = ET.parse(pomFile)
@@ -66,12 +67,12 @@ if target_element is not None:
                     #print(corpora_list)
 plugin_corpora_dict["empty"]=[]
 
-'''with open('Unused_dir_And_all_tried_plugins.csv', 'a', newline='') as file:
+with open('Unused_dir_And_all_tried_plugins.csv', 'a', newline='') as file:
     writer = csv.writer(file)
-    writer.writerow(["Proj_name","Workflow","Unused-Dir-Name", "Plugin-That-Are-Used-For-Tf-IDF"])  # Write header
-    writer.writerow([sys.argv[3],sys.argv[4],unnecessary_directory, key_list])'''
+    writer.writerow(["Proj_name","Workflow","Java-Version","MVN-command","Uniq-ID","Unused-Dir-Name", "Plugin-That-Are-Used-For-Tf-IDF"])  # Write header
+    writer.writerow([sys.argv[3],unnecessary_directory, key_list])
 
-unnecessary_list_corpora=unnecessary_directory.split("/")
+'''unnecessary_list_corpora=unnecessary_directory.split("/")
 vectorizer = TfidfVectorizer()
 
 result_plugin="Result_with_only_plugin_name.csv"
@@ -93,11 +94,11 @@ with open(result_plugin, 'a', newline='') as file:
     writer.writerow(["Proj_name","Workflow","Unused-Dir-Name", "Plugin-Name"])  # Write header
     writer.writerow([sys.argv[3],sys.argv[4],unnecessary_directory, result_plugin_arr])
 
-with open('Result.csv', 'a') as file:
-    file.write(str(result_plugin_arr))
+with open(result_file, 'a') as file:
+    file.write(str(result_plugin_arr))'''
 
 ###SIMILARITY SCORE CALCULATE Based off of the full plugin info
-'''non_zero_matched_plugin_with_unused_dict={}
+non_zero_matched_plugin_with_unused_dict={}
 plugin=""
 for key, plugin in plugin_corpora_dict.items():
     #print('****Value='+str(value))
@@ -113,7 +114,8 @@ for key, plugin in plugin_corpora_dict.items():
         if local_max_sim > 0.0:
             non_zero_matched_plugin_with_unused_dict[key]=round(local_max_sim,3)
 sorted_dict=dict(sorted(non_zero_matched_plugin_with_unused_dict.items(), key=lambda x:x[1],reverse=True))
-with open('Result_1.csv', 'a') as file:
+with open(result_file, 'a') as file:
     #f.write(sorted_dir)
-    json.dump(sorted_dict, file)'''
+    file.write(str(sorted_dict))
+    #json.dump(sorted_dict, file)'''
 #print(sorted_dict)
