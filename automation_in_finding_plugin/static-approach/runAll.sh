@@ -6,7 +6,7 @@ fi
 
 currentDir=$(pwd)
 header=true
-result="$currentDir/Result_without_plugin_dependency.csv"
+result="$currentDir/TF_IDF_Result_without_plugin_dependency.csv"
 #result="$currentDir/Result_with_all_plugin_dependency.csv"
 while read line
 do 
@@ -47,7 +47,27 @@ do
         continue
     fi
     mvn org.apache.maven.plugins:maven-help-plugin:3.4.0:effective-pom -Doutput=effective-pom.xml
-    if [[ -f effective-pom.xml ]]; then
+     range_build_plugins=($(awk '/<build>/,/<\/build>/ {
+    if(/<plugins>/) {
+        if(!pMgmt) {start=NR}
+    }
+    if(/<\/plugins>/) {
+        if(!pMgmt) {print start; print NR; exit}
+    }
+    if(/<pluginManagement>/) {
+        pMgmt=1
+    }
+    if(/<\/pluginManagement>/) {
+        pMgmt=0
+    }
+}' effective-pom.xml)) #this one is ignoring the plugins if it belongs to pluginManagement
+
+    Start_range="${range_build_plugins[0]}"
+    end_range="${range_build_plugins[1]}"
+    #sed -n "$Start_range,${end_range}p" effective-pom.xml | awk -v adj=$Start_range '{printf("%-5d%s\n", NR-1+adj, $0)}' > tmp.xml
+    sed -n "$Start_range,${end_range}p" effective-pom.xml | awk '{print}' > tmp.xml
+
+    if [[ -f tmp.xml ]]; then
         cd $currentDir
         #Find each unused dir one by one
         tildeCount=$(echo ${unused_dirs} | tr -cd '~' | wc -c)
@@ -61,13 +81,12 @@ do
             if [[ $semicolon_found_indicates_file -eq 0 ]]; then
                 #echo "UNU $unnecessary_dir"
                 echo -n "$proj_name,$workflow_file,$java_version,$mvn_command,${unused_csv_file},${unnecessary_dir}," >> "$result"
-
+                
                 if [[ $proj_name == "open-location-code" ]]; then
-                    python3 find_plugin_corpus.py "../projects/$proj_name/java/effective-pom.xml" ${unnecessary_dir} "$input_upto_colum_five" $result
+                    python3 find_plugin_corpus.py "../projects/$proj_name/java/tmp.xml" ${unnecessary_dir} "$input_upto_colum_five" $result
                 else
-                    python3 find_plugin_corpus.py "../projects/$proj_name/effective-pom.xml" ${unnecessary_dir} "$input_upto_colum_five" $result
+                    python3 find_plugin_corpus.py "../projects/$proj_name/tmp.xml" ${unnecessary_dir} "$input_upto_colum_five" $result
                 fi
-                #exit
                 #echo "SHANTO*** ${unnecessary_dir}"
                 echo "" >> "$result"
             fi
